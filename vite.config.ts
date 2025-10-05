@@ -5,11 +5,11 @@ import react from '@vitejs/plugin-react'
 
 // https://vite.dev/config/
 export default defineConfig({
-  assetsInclude: ['**/*.glb'],
   plugins: [react(),tailwindcss()],
+  base: "/portfolio",
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),
     },
   },
-})
+});
