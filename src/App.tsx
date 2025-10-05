@@ -830,7 +830,7 @@ function App() {
 
               {/* Resume */}
               <a
-                href="/resume.pdf"
+                href="https://drive.google.com/drive/folders/1ZiECkk-QrX3pHuYe2b-TaKyXrnxVusJ1?usp=sharing"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="group relative"
