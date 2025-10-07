@@ -126,3 +126,88 @@
     @apply bg-background text-foreground;
   }
 }
+
+/* Performance optimizations for low-end devices */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Optimize animations for better performance */
+.performance-optimized {
+  will-change: transform;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  perspective: 1000px;
+}
+
+/* Reduce effects on low-end devices */
+@media (max-width: 768px), (pointer: coarse) {
+  .backdrop-blur-xl {
+    backdrop-filter: blur(4px) !important;
+    background-color: rgba(0, 0, 0, 0.6) !important;
+  }
+  
+  .bg-gradient-to-br,
+  .bg-gradient-to-r {
+    background: rgba(82, 39, 255, 0.3) !important;
+  }
+  
+  /* Simplify transforms on mobile */
+  .card-swap-container {
+    transform: scale(0.85);
+    transform-origin: center;
+  }
+  
+  /* Reduce shadow complexity */
+  .shadow-2xl,
+  .shadow-xl {
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1) !important;
+  }
+}
+
+/* Mobile responsive improvements */
+@media (max-width: 768px) {
+  .hero-section {
+    padding-top: 2rem;
+    padding-bottom: 2rem;
+  }
+  
+  /* Prevent horizontal overflow */
+  body {
+    overflow-x: hidden;
+  }
+  
+  /* Ensure proper spacing for mobile nav */
+  #hero {
+    scroll-margin-top: 4rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .card-swap-container {
+    transform: scale(0.75);
+  }
+  
+  .hero-text {
+    padding: 0 1rem;
+  }
+  
+  /* Further reduce effects on very small screens */
+  .backdrop-blur-xl {
+    backdrop-filter: blur(2px) !important;
+    background-color: rgba(0, 0, 0, 0.7) !important;
+  }
+}
+
+/* Hardware acceleration for key elements */
+.hw-accelerated {
+  transform: translateZ(0);
+  will-change: transform;
+}

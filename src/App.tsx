@@ -1,7 +1,18 @@
 import './App.css'
-import { lazy, Suspense } from 'react'
+import { lazy, Suspense, useEffect, useState } from 'react'
 import Dock from './components/Dock'
+import PillNav from './components/PillNav'
 import DecryptedText from './components/DecryptedText'
+import docker from './assets/docker-svgrepo-com.svg'
+import postgres from './assets/postgresql-svgrepo-com.svg'
+import redis from './assets/redis-svgrepo-com.svg'
+import react from './assets/reactjs-svgrepo-com.svg'
+import tailwind from './assets/tailwind-svgrepo-com.svg'
+import typescript from './assets/typescript-icon-svgrepo-com.svg'
+import nodejs from './assets/node-js-svgrepo-com.svg'
+import nextjs from './assets/next-js-svgrepo-com.svg'
+import js from './assets/js-svgrepo-com.svg'
+import git from './assets/git-svgrepo-com.svg'
 import {
   Rocket,
   Code2,
@@ -13,27 +24,9 @@ import {
   Linkedin,
   Github,
   Mail,
-  Database,
   FileCode2,
-  Braces,
-  Terminal,
   Cpu,
-  Box,
-  Network,
-  GitBranch,
-  Layers,
-  Grid2x2,
   BarChart3,
-  LineChart,
-  Edit3,
-  FunctionSquare,
-  CalendarClock,
-  Cloud,
-  Server,
-  PlugZap,
-  GitCommitHorizontal,
-  Workflow,
-  FileCog,
   Feather,
   TrendingUp,
   ExternalLink
@@ -41,13 +34,46 @@ import {
 
 // Lazy load heavy components
 const LiquidEther = lazy(() => import('./components/LiquidEther'))
-const InfiniteScroll = lazy(() => import('./components/InfiniteScroll'))
+const CircularGallery = lazy(() => import('./components/CircularGallery'))
 const CardSwap = lazy(() => import('./components/CardSwap').then(module => ({ default: module.default })))
 const Card = lazy(() => import('./components/CardSwap').then(module => ({ default: module.Card })))
 const SpotlightCard = lazy(() => import('./components/SpotlightCard'))
 const FuzzyText = lazy(() => import('./components/FuzzyText'))
 
 function App() {
+  // Performance detection for low-end devices
+  const [isLowEndDevice, setIsLowEndDevice] = useState(false);
+
+  useEffect(() => {
+    // Detect low-end device based on hardware concurrency and memory
+    const detectLowEndDevice = () => {
+      const hardwareConcurrency = navigator.hardwareConcurrency || 2;
+      const deviceMemory = (navigator as any).deviceMemory || 4;
+      const isLowEnd = hardwareConcurrency <= 2 || deviceMemory <= 2;
+      setIsLowEndDevice(isLowEnd);
+    };
+
+    detectLowEndDevice();
+  }, []);
+
+  // Add smooth scroll behavior for anchor links
+  useEffect(() => {
+    const handleAnchorClick = (e: Event) => {
+      const target = e.target as HTMLAnchorElement;
+      if (target.tagName === 'A' && target.href.includes('#')) {
+        const hash = target.href.split('#')[1];
+        const element = document.getElementById(hash);
+        if (element) {
+          e.preventDefault();
+          element.scrollIntoView({ behavior: 'smooth' });
+        }
+      }
+    };
+
+    document.addEventListener('click', handleAnchorClick);
+    return () => document.removeEventListener('click', handleAnchorClick);
+  }, []);
+
   const dockItems = [
     {
       icon: <Home size={20} strokeWidth={1.5} className="text-white" />,
@@ -83,281 +109,102 @@ function App() {
     }
   ]
 
-  const skillItems = [
-    // Languages
+  // Top 10 Most In-Demand Skills with SVG icons
+  const skillsItems = [
     {
-      content: (
-        <div className="flex items-center gap-2 p-4 bg-gradient-to-r from-[#5227FF] to-[#7B3FFF] text-white font-bold rounded-lg border border-[#5227FF]/30">
-          <Code2 /> JavaScript (ES6+)
-        </div>
-      )
+      image: js,
+      text: " ",
     },
     {
-      content: (
-        <div className="flex items-center gap-2 p-4 bg-gradient-to-r from-[#FF9FFC] to-[#FFB3FC] text-white font-bold rounded-lg border border-[#FF9FFC]/30">
-          <Database /> SQL
-        </div>
-      )
+      image: react,
+      text: ' ',
     },
     {
-      content: (
-        <div className="flex items-center gap-2 p-4 bg-gradient-to-r from-[#B19EEF] to-[#C5B3F3] text-white font-bold rounded-lg border border-[#B19EEF]/30">
-          <FileCode2 /> HTML5
-        </div>
-      )
+      image: nodejs,
+      text: ' ',
     },
     {
-      content: (
-        <div className="flex items-center gap-2 p-4 bg-gradient-to-r from-[#5227FF] to-[#7B3FFF] text-white font-bold rounded-lg border border-[#5227FF]/30">
-          <Braces /> CSS3
-        </div>
-      )
+      image: nextjs,
+      text: ' ',
     },
     {
-      content: (
-        <div className="flex items-center gap-2 p-4 bg-gradient-to-r from-[#FF9FFC] to-[#FFB3FC] text-white font-bold rounded-lg border border-[#FF9FFC]/30">
-          <Braces /> Sass
-        </div>
-      )
-    },
-
-    // Frameworks & Libraries
-    {
-      content: (
-        <div className="flex items-center gap-2 p-4 bg-gradient-to-r from-[#B19EEF] to-[#C5B3F3] text-white font-bold rounded-lg border border-[#B19EEF]/30">
-          <Cpu /> React
-        </div>
-      )
+      image: typescript,
+      text: ' ',
     },
     {
-      content: (
-        <div className="flex items-center gap-2 p-4 bg-gradient-to-r from-[#5227FF] to-[#7B3FFF] text-white font-bold rounded-lg border border-[#5227FF]/30">
-          <Box /> Next.js
-        </div>
-      )
+      image: postgres,
+      text: '',
     },
     {
-      content: (
-        <div className="flex items-center gap-2 p-4 bg-gradient-to-r from-[#FF9FFC] to-[#FFB3FC] text-white font-bold rounded-lg border border-[#FF9FFC]/30">
-          <Layers /> Vue.js (2 & 3)
-        </div>
-      )
+      image: redis,
+      text: ' ',
     },
     {
-      content: (
-        <div className="flex items-center gap-2 p-4 bg-gradient-to-r from-[#B19EEF] to-[#C5B3F3] text-white font-bold rounded-lg border border-[#B19EEF]/30">
-          <Network /> Vue Router
-        </div>
-      )
+      image: docker,
+      text: ' ',
     },
     {
-      content: (
-        <div className="flex items-center gap-2 p-4 bg-gradient-to-r from-[#5227FF] to-[#7B3FFF] text-white font-bold rounded-lg border border-[#5227FF]/30">
-          <GitBranch /> Vuex
-        </div>
-      )
+      image: tailwind,
+      text: ' ',
     },
     {
-      content: (
-        <div className="flex items-center gap-2 p-4 bg-gradient-to-r from-[#FF9FFC] to-[#FFB3FC] text-white font-bold rounded-lg border border-[#FF9FFC]/30">
-          <GitBranch /> Pinia
-        </div>
-        )
+      image: git,
+      text: ' ',
     },
-    {
-      content: (
-        <div className="flex items-center gap-2 p-4 bg-gradient-to-r from-[#B19EEF] to-[#C5B3F3] text-white font-bold rounded-lg border border-[#B19EEF]/30">
-          <Terminal /> Node.js
-        </div>
-      )
-    },
-    {
-      content: (
-        <div className="flex items-center gap-2 p-4 bg-gradient-to-r from-[#5227FF] to-[#7B3FFF] text-white font-bold rounded-lg border border-[#5227FF]/30">
-          <Server /> Express
-        </div>
-      )
-    },
-    {
-      content: (
-        <div className="flex items-center gap-2 p-4 bg-gradient-to-r from-[#FF9FFC] to-[#FFB3FC] text-white font-bold rounded-lg border border-[#FF9FFC]/30">
-          <PlugZap /> Socket.IO
-        </div>
-      )
-    },
-    {
-      content: (
-        <div className="flex items-center gap-2 p-4 bg-gradient-to-r from-[#B19EEF] to-[#C5B3F3] text-white font-bold rounded-lg border border-[#B19EEF]/30">
-          <Braces /> Tailwind CSS
-        </div>
-      )
-    },
-    {
-      content: (
-        <div className="flex items-center gap-2 p-4 bg-gradient-to-r from-[#5227FF] to-[#7B3FFF] text-white font-bold rounded-lg border border-[#5227FF]/30">
-          <Grid2x2 /> AG-Grid
-        </div>
-      )
-    },
-    {
-      content: (
-        <div className="flex items-center gap-2 p-4 bg-gradient-to-r from-[#FF9FFC] to-[#FFB3FC] text-white font-bold rounded-lg border border-[#FF9FFC]/30">
-          <BarChart3 /> Recharts
-        </div>
-      )
-    },
-    {
-      content: (
-        <div className="flex items-center gap-2 p-4 bg-gradient-to-r from-[#B19EEF] to-[#C5B3F3] text-white font-bold rounded-lg border border-[#B19EEF]/30">
-          <LineChart /> Chart.js
-        </div>
-      )
-    },
-    {
-      content: (
-        <div className="flex items-center gap-2 p-4 bg-gradient-to-r from-[#5227FF] to-[#7B3FFF] text-white font-bold rounded-lg border border-[#5227FF]/30">
-          <Edit3 /> TipTap
-        </div>
-      )
-    },
-    {
-      content: (
-        <div className="flex items-center gap-2 p-4 bg-gradient-to-r from-[#FF9FFC] to-[#FFB3FC] text-white font-bold rounded-lg border border-[#FF9FFC]/30">
-          <FunctionSquare /> Lodash
-        </div>
-      )
-    },
-    {
-      content: (
-        <div className="flex items-center gap-2 p-4 bg-gradient-to-r from-[#B19EEF] to-[#C5B3F3] text-white font-bold rounded-lg border border-[#B19EEF]/30">
-          <CalendarClock /> Moment.js
-        </div>
-      )
-    },
-    {
-      content: (
-        <div className="flex items-center gap-2 p-4 bg-gradient-to-r from-[#5227FF] to-[#7B3FFF] text-white font-bold rounded-lg border border-[#5227FF]/30">
-          <Cloud /> Supabase.js
-        </div>
-      )
-    },
-
-    // Databases & Services
-    {
-      content: (
-        <div className="flex items-center gap-2 p-4 bg-gradient-to-r from-[#FF9FFC] to-[#FFB3FC] text-white font-bold rounded-lg border border-[#FF9FFC]/30">
-          <Database /> PostgreSQL (Supabase)
-        </div>
-      )
-    },
-    {
-      content: (
-        <div className="flex items-center gap-2 p-4 bg-gradient-to-r from-[#B19EEF] to-[#C5B3F3] text-white font-bold rounded-lg border border-[#B19EEF]/30">
-          <Database /> Redis
-        </div>
-      )
-    },
-    {
-      content: (
-        <div className="flex items-center gap-2 p-4 bg-gradient-to-r from-[#5227FF] to-[#7B3FFF] text-white font-bold rounded-lg border border-[#5227FF]/30">
-          <Cpu /> Hugging Face API
-        </div>
-      )
-    },
-
-    // Others
-    {
-      content: (
-        <div className="flex items-center gap-2 p-4 bg-gradient-to-r from-[#FF9FFC] to-[#FFB3FC] text-white font-bold rounded-lg border border-[#FF9FFC]/30">
-          <Package /> Docker
-        </div>
-      )
-    },
-    {
-      content: (
-        <div className="flex items-center gap-2 p-4 bg-gradient-to-r from-[#B19EEF] to-[#C5B3F3] text-white font-bold rounded-lg border border-[#B19EEF]/30">
-          <GitCommitHorizontal /> Git
-        </div>
-      )
-    },
-    {
-      content: (
-        <div className="flex items-center gap-2 p-4 bg-gradient-to-r from-[#5227FF] to-[#7B3FFF] text-white font-bold rounded-lg border border-[#5227FF]/30">
-          <Braces /> REST APIs
-        </div>
-      )
-    },
-    {
-      content: (
-        <div className="flex items-center gap-2 p-4 bg-gradient-to-r from-[#FF9FFC] to-[#FFB3FC] text-white font-bold rounded-lg border border-[#FF9FFC]/30">
-          <Network /> WebSockets
-        </div>
-      )
-    },
-    {
-      content: (
-        <div className="flex items-center gap-2 p-4 bg-gradient-to-r from-[#B19EEF] to-[#C5B3F3] text-white font-bold rounded-lg border border-[#B19EEF]/30">
-          <Box /> Retool
-        </div>
-      )
-    },
-    {
-      content: (
-        <div className="flex items-center gap-2 p-4 bg-gradient-to-r from-[#5227FF] to-[#7B3FFF] text-white font-bold rounded-lg border border-[#5227FF]/30">
-          <Server /> Nginx
-        </div>
-      )
-    },
-    {
-      content: (
-        <div className="flex items-center gap-2 p-4 bg-gradient-to-r from-[#FF9FFC] to-[#FFB3FC] text-white font-bold rounded-lg border border-[#FF9FFC]/30">
-          <Package /> Axios
-        </div>
-      )
-    },
-    {
-      content: (
-        <div className="flex items-center gap-2 p-4 bg-gradient-to-r from-[#B19EEF] to-[#C5B3F3] text-white font-bold rounded-lg border border-[#B19EEF]/30">
-          <Workflow /> CI/CD
-        </div>
-      )
-    },
-    {
-      content: (
-        <div className="flex items-center gap-2 p-4 bg-gradient-to-r from-[#5227FF] to-[#7B3FFF] text-white font-bold rounded-lg border border-[#5227FF]/30">
-          <FileCog /> Swagger
-        </div>
-      )
-    }
   ]
 
   return (
     <>
       {/* Fixed background that spans entire viewport */}
       <div className="fixed inset-0 w-full h-full pointer-events-none">
-        <Suspense fallback={<div className="w-full h-full bg-[#0a0a0f]" />}>
-          <LiquidEther
-            colors={["#5227FF", "#FF9FFC", "#B19EEF"]}
-            mouseForce={20}
-            cursorSize={100}
-            isViscous={false}
-            viscous={30}
-            iterationsViscous={32}
-            iterationsPoisson={32}
-            resolution={0.5}
-            isBounce={false}
-            autoDemo={true}
-            autoSpeed={0.5}
-            autoIntensity={2.2}
-            takeoverDuration={0.25}
-            autoResumeDelay={3000}
-            autoRampDuration={0.6}
-          />
-        </Suspense>
+        {!isLowEndDevice ? (
+          <Suspense fallback={<div className="w-full h-full bg-[#0a0a0f]" />}>
+            <LiquidEther
+              colors={["#5227FF", "#FF9FFC", "#B19EEF"]}
+              mouseForce={isLowEndDevice ? 10 : 20}
+              cursorSize={isLowEndDevice ? 50 : 100}
+              isViscous={false}
+              viscous={isLowEndDevice ? 15 : 30}
+              iterationsViscous={isLowEndDevice ? 16 : 32}
+              iterationsPoisson={isLowEndDevice ? 16 : 32}
+              resolution={isLowEndDevice ? 0.3 : 0.5}
+              isBounce={false}
+              autoDemo={true}
+              autoSpeed={isLowEndDevice ? 0.3 : 0.5}
+              autoIntensity={isLowEndDevice ? 1.5 : 2.2}
+              takeoverDuration={0.25}
+              autoResumeDelay={3000}
+              autoRampDuration={0.6}
+            />
+          </Suspense>
+        ) : (
+          <div className="w-full h-full bg-gradient-to-br from-[#0a0a0f] via-[#1a0a2f] to-[#0a0a0f]" />
+        )}
       </div>
 
-      {/* Fixed Dock Navigation */}
-      <div className="fixed bottom-0 left-0 right-0 z-50 pointer-events-none">
+      {/* PillNav for mobile only */}
+      <div className="md:hidden">
+        <PillNav
+          logo="/vite.svg"
+          logoAlt="Portfolio Logo"
+          items={[
+            { label: 'Home', href: '#hero' },
+            { label: 'Projects', href: '#projects' },
+            { label: 'Skills', href: '#skills' },
+            { label: 'Contact', href: '#contact' }
+          ]}
+          activeHref="#hero"
+          className="custom-nav"
+          ease="power2.easeOut"
+          baseColor="rgba(0, 0, 0, 0.8)"
+          pillColor="#5227FF"
+          hoveredPillTextColor="#ffffff"
+          pillTextColor="#ffffff"
+        />
+      </div>
+
+      {/* Fixed Dock Navigation - Desktop only */}
+      <div className="hidden md:block fixed bottom-0 left-0 right-0 z-50 pointer-events-none">
         <div className="pointer-events-auto">
           <Dock
             items={dockItems}
@@ -374,12 +221,12 @@ function App() {
         {/* Hero Section */}
         <section
           id="hero"
-          className="min-h-screen flex items-center justify-center px-6 py-20"
+          className="hero-section min-h-screen flex items-center justify-center px-6 py-16 md:py-20"
         >
           <div className="w-full max-w-7xl mx-auto">
-            <div className="grid lg:grid-cols-2 gap-16 lg:gap-24 items-center">
+            <div className="grid lg:grid-cols-2 gap-8 lg:gap-24 items-center min-h-[80vh] lg:min-h-0">
               {/* Left Side - Text Content */}
-              <div className="text-center lg:text-left order-1">
+              <div className="hero-text text-center lg:text-left order-2 lg:order-1 flex flex-col justify-center">
                 {/* Main Name */}
                 <h1 className="mb-6">
                   <DecryptedText
@@ -389,8 +236,8 @@ function App() {
                     maxIterations={15}
                     revealDirection="center"
                     sequential={true}
-                    className="text-6xl md:text-7xl lg:text-8xl font-bold tracking-tight text-white"
-                    encryptedClassName="text-6xl md:text-7xl lg:text-8xl font-bold tracking-tight text-white/40"
+                    className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-bold tracking-tight text-white"
+                    encryptedClassName="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-bold tracking-tight text-white/40"
                   />
                 </h1>
 
@@ -403,8 +250,8 @@ function App() {
                     maxIterations={12}
                     revealDirection="start"
                     sequential={true}
-                    className="text-2xl md:text-3xl lg:text-4xl font-light tracking-wide text-[#5227FF]"
-                    encryptedClassName="text-2xl md:text-3xl lg:text-4xl font-light tracking-wide text-[#5227FF]/30"
+                    className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-light tracking-wide text-[#5227FF]"
+                    encryptedClassName="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-light tracking-wide text-[#5227FF]/30"
                   />
                 </h2>
               </div>
@@ -419,48 +266,43 @@ function App() {
                   }
                 >
                   <CardSwap
-                    width={420}
-                    height={520}
-                    cardDistance={50}
-                    verticalDistance={60}
-                    delay={4000}
+                    width={250}
+                    height={350}
+                    cardDistance={isLowEndDevice ? 30 : 50}
+                    verticalDistance={isLowEndDevice ? 40 : 60}
+                    delay={isLowEndDevice ? 6000 : 4000}
                     pauseOnHover={true}
-                    easing="elastic"
-                    skewAmount={4}
+                    easing={isLowEndDevice ? "linear" : "elastic"}
+                    skewAmount={isLowEndDevice ? 2 : 4}
                   >
                     {/* Card 1: SyncUp Project */}
-                    <Card className="backdrop-blur-xl bg-gradient-to-br from-[#5227FF]/20 to-[#FF9FFC]/20 border-[#5227FF]/30">
-                      <div className="p-8 h-full flex flex-col justify-between">
+                    <Card className="backdrop-blur-xl bg-gradient-to-br from-[#5227FF]/30 to-[#FF9FFC]/30 bg-black/40 border-[#5227FF]/30">
+                      <div className="p-4 sm:p-6 lg:p-8 h-full flex flex-col justify-between">
                         <div>
-                          <div className="flex items-center gap-3 mb-4">
-                            <div className="p-3 rounded-xl bg-[#5227FF]/20 border border-[#5227FF]/40">
-                              <Rocket size={28} className="text-[#5227FF]" />
+                          <div className="flex items-center gap-2 mb-3">
+                            <div className="p-2 rounded-lg bg-[#5227FF]/20 border border-[#5227FF]/40">
+                              <Rocket size={20} className="text-[#5227FF]" />
                             </div>
-                            <span className="text-sm font-medium text-white/60 uppercase tracking-wider">
+                            <span className="text-xs font-medium text-white/60 uppercase tracking-wider">
                               Featured Project
                             </span>
                           </div>
-                          <h3 className="text-3xl font-bold text-white mb-3">
+                          <h3 className="text-xl sm:text-2xl lg:text-3xl font-bold text-white mb-2">
                             SyncUp
                           </h3>
-                          <p className="text-white/70 text-base leading-relaxed mb-4">
-                            Full-stack real-time collaboration platform with
-                            sub-second data synchronization using Redis Pub-Sub
-                            and WebSockets.
+                          <p className="text-white/70 text-sm sm:text-base leading-relaxed mb-3">
+                            Real-time collaboration platform with Redis Pub-Sub and WebSockets.
                           </p>
                         </div>
                         <div className="space-y-2">
-                          <div className="flex flex-wrap gap-2">
-                            <span className="px-3 py-1 rounded-full bg-[#5227FF]/20 border border-[#5227FF]/40 text-xs text-white/80">
+                          <div className="flex flex-wrap gap-1">
+                            <span className="px-2 py-1 rounded-full bg-[#5227FF]/20 border border-[#5227FF]/40 text-xs text-white/80">
                               Redis
                             </span>
-                            <span className="px-3 py-1 rounded-full bg-[#5227FF]/20 border border-[#5227FF]/40 text-xs text-white/80">
+                            <span className="px-2 py-1 rounded-full bg-[#5227FF]/20 border border-[#5227FF]/40 text-xs text-white/80">
                               WebSockets
                             </span>
-                            <span className="px-3 py-1 rounded-full bg-[#5227FF]/20 border border-[#5227FF]/40 text-xs text-white/80">
-                              Supabase
-                            </span>
-                            <span className="px-3 py-1 rounded-full bg-[#5227FF]/20 border border-[#5227FF]/40 text-xs text-white/80">
+                            <span className="px-2 py-1 rounded-full bg-[#5227FF]/20 border border-[#5227FF]/40 text-xs text-white/80">
                               Next.js
                             </span>
                           </div>
@@ -469,84 +311,67 @@ function App() {
                     </Card>
 
                     {/* Card 2: Vue 3 Migration */}
-                    <Card className="backdrop-blur-xl bg-gradient-to-br from-[#FF9FFC]/20 to-[#B19EEF]/20 border-[#FF9FFC]/30">
-                      <div className="p-8 h-full flex flex-col justify-between">
+                    <Card className="backdrop-blur-xl bg-gradient-to-br from-[#FF9FFC]/30 to-[#B19EEF]/30 bg-black/40 border-[#FF9FFC]/30">
+                      <div className="p-4 sm:p-6 lg:p-8 h-full flex flex-col justify-between">
                         <div>
-                          <div className="flex items-center gap-3 mb-4">
-                            <div className="p-3 rounded-xl bg-[#FF9FFC]/20 border border-[#FF9FFC]/40">
-                              <Feather size={28} className="text-[#FF9FFC]" />
+                          <div className="flex items-center gap-2 mb-3">
+                            <div className="p-2 rounded-lg bg-[#FF9FFC]/20 border border-[#FF9FFC]/40">
+                              <Feather size={20} className="text-[#FF9FFC]" />
                             </div>
-                            <span className="text-sm font-medium text-white/60 uppercase tracking-wider">
+                            <span className="text-xs font-medium text-white/60 uppercase tracking-wider">
                               Frontend Engineering
                             </span>
                           </div>
-                          <h3 className="text-3xl font-bold text-white mb-3">
-                            Vue App Migration
+                          <h3 className="text-xl sm:text-2xl lg:text-3xl font-bold text-white mb-2">
+                            Vue Migration
                           </h3>
-                          <p className="text-white/70 text-base leading-relaxed mb-4">
-                            Led a large-scale migration from Vue 2 to Vue 3 for
-                            a MAANG tech client — modernized over 200
-                            components, adopted the Composition API, and
-                            transitioned from Vuex to Pinia for cleaner, modular
-                            state management.
+                          <p className="text-white/70 text-sm sm:text-base leading-relaxed mb-3">
+                            Vue 2 to Vue 3 migration for MAANG client — 200+ components modernized.
                           </p>
                         </div>
                         <div className="space-y-2">
-                          <div className="flex flex-wrap gap-2 mt-3">
-                            <span className="px-3 py-1 rounded-full bg-[#FF9FFC]/20 border border-[#FF9FFC]/40 text-xs text-white/80">
+                          <div className="flex flex-wrap gap-1">
+                            <span className="px-2 py-1 rounded-full bg-[#FF9FFC]/20 border border-[#FF9FFC]/40 text-xs text-white/80">
                               Vue 3
                             </span>
-                            <span className="px-3 py-1 rounded-full bg-[#FF9FFC]/20 border border-[#FF9FFC]/40 text-xs text-white/80">
-                              Vite
-                            </span>
-                            <span className="px-3 py-1 rounded-full bg-[#FF9FFC]/20 border border-[#FF9FFC]/40 text-xs text-white/80">
-                              Vuex
+                            <span className="px-2 py-1 rounded-full bg-[#FF9FFC]/20 border border-[#FF9FFC]/40 text-xs text-white/80">
+                              Pinia
                             </span>
                           </div>
                         </div>
                       </div>
                     </Card>
-                    <Card className="backdrop-blur-xl bg-gradient-to-br from-[#FF9FFC]/20 to-[#FFD1FF]/20 border-[#FF9FFC]/30">
-                      <div className="p-8 h-full flex flex-col justify-between">
+                    <Card className="backdrop-blur-xl bg-gradient-to-br from-[#FF9FFC]/30 to-[#FFD1FF]/30 bg-black/40 border-[#FF9FFC]/30">
+                      <div className="p-4 sm:p-6 lg:p-8 h-full flex flex-col justify-between">
                         <div>
-                          <div className="flex items-center gap-3 mb-4">
-                            <div className="p-3 rounded-xl bg-[#FF9FFC]/20 border border-[#FF9FFC]/40">
-                              <BarChart3 size={28} className="text-[#FF9FFC]" />
+                          <div className="flex items-center gap-2 mb-3">
+                            <div className="p-2 rounded-lg bg-[#FF9FFC]/20 border border-[#FF9FFC]/40">
+                              <BarChart3 size={20} className="text-[#FF9FFC]" />
                             </div>
-                            <span className="text-sm font-medium text-white/60 uppercase tracking-wider">
-                              Product Enhancement
+                            <span className="text-xs font-medium text-white/60 uppercase tracking-wider">
+                              Analytics
                             </span>
                           </div>
-                          <h3 className="text-3xl font-bold text-white mb-3">
-                            Social Listening Dashboard
+                          <h3 className="text-xl sm:text-2xl lg:text-3xl font-bold text-white mb-2">
+                            CRM Dashboard
                           </h3>
-                          <p className="text-white/70 text-base leading-relaxed mb-4">
-                            Built analytics features for a real-time
-                            CRM-integrated platform — improved customer response
-                            efficiency by 20% and boosted engagement by
-                            designing 4 new chart types for insight
-                            visualization.
+                          <p className="text-white/70 text-sm sm:text-base leading-relaxed mb-3">
+                            Real-time analytics platform with 20% efficiency improvement.
                           </p>
                         </div>
                         <div className="space-y-2">
-                          <div className="flex items-center gap-2 text-white/90">
-                            <TrendingUp size={20} className="text-[#FF9FFC]" />
-                            <span className="text-sm font-semibold">
-                              +20% Efficiency Gain
+                          <div className="flex items-center gap-2 text-white/90 mb-2">
+                            <TrendingUp size={16} className="text-[#FF9FFC]" />
+                            <span className="text-xs font-semibold">
+                              +20% Efficiency
                             </span>
                           </div>
-                          <div className="flex flex-wrap gap-2 mt-3">
-                            <span className="px-3 py-1 rounded-full bg-[#FF9FFC]/20 border border-[#FF9FFC]/40 text-xs text-white/80">
+                          <div className="flex flex-wrap gap-1">
+                            <span className="px-2 py-1 rounded-full bg-[#FF9FFC]/20 border border-[#FF9FFC]/40 text-xs text-white/80">
                               React
                             </span>
-                            <span className="px-3 py-1 rounded-full bg-[#FF9FFC]/20 border border-[#FF9FFC]/40 text-xs text-white/80">
+                            <span className="px-2 py-1 rounded-full bg-[#FF9FFC]/20 border border-[#FF9FFC]/40 text-xs text-white/80">
                               Recharts
-                            </span>
-                            <span className="px-3 py-1 rounded-full bg-[#FF9FFC]/20 border border-[#FF9FFC]/40 text-xs text-white/80">
-                              Tailwind CSS
-                            </span>
-                            <span className="px-3 py-1 rounded-full bg-[#FF9FFC]/20 border border-[#FF9FFC]/40 text-xs text-white/80">
-                              REST APIs
                             </span>
                           </div>
                         </div>
@@ -847,12 +672,7 @@ function App() {
               </a>
             </div>
 
-            {/* Additional Info */}
-            <div className="mt-20 pt-8 border-t border-white/10">
-              <p className="text-white/40 text-sm">
-                © 2025 Divyansh Joshi. Built with React, Three.js, and passion.
-              </p>
-            </div>
+            
           </div>
         </section>
 
@@ -865,32 +685,37 @@ function App() {
             {/* Section Header */}
             <div className="text-center mb-16">
               <h2 className="text-5xl md:text-6xl font-bold text-white mb-4">
-                Tech Stack
+                Core Technologies
               </h2>
+              <p className="text-xl text-white/70 max-w-3xl mx-auto">
+                Mastering the most in-demand technologies for modern web development
+              </p>
             </div>
 
-            {/* InfiniteScroll centered */}
-            <div style={{ height: "500px", position: "relative" }}>
+            {/* CircularGallery with Skills */}
+            <div style={{ height: '600px', position: 'relative' }}>
               <Suspense
                 fallback={
                   <div className="flex items-center justify-center h-full text-white/40">
-                    Loading skills...
+                    Loading technologies...
                   </div>
                 }
               >
-                <InfiniteScroll
-                  items={skillItems}
-                  width="30rem"
-                  maxHeight="400px"
-                  itemMinHeight={70}
-                  isTilted={true}
-                  autoplay={true}
-                  tiltDirection="right"
-                  autoplaySpeed={1}
-                  autoplayDirection="down"
-                  pauseOnHover={true}
+                <CircularGallery
+                  items={skillsItems}
+                  bend={1}
+                  textColor="#ffffff"
+                  borderRadius={0.05}
+                  scrollSpeed={1}
+                  scrollEase={0.02}
                 />
               </Suspense>
+            </div>
+            {/* Additional Info */}
+            <div className="mt-20 pt-8 border-t border-white/10">
+              <p className="text-white/40 text-sm">
+                © 2025 Divyansh Joshi. Built with React, Three.js, and passion.
+              </p>
             </div>
           </div>
         </section>
@@ -899,4 +724,4 @@ function App() {
   );
 }
 
-export default App  
+export default App
