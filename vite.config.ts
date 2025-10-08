@@ -12,4 +12,18 @@ export default defineConfig({
       "@": path.resolve(__dirname, "./src"),
     },
   },
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks(id) {
+          if (id.includes('node_modules')) {
+            if (id.includes('three') || id.includes('@react-three/fiber') || id.includes('@react-three/drei') || id.includes('ogl')) {
+              return 'vendor-3d';
+            }
+            return 'vendor';
+          }
+        }
+      }
+    }
+  }
 });

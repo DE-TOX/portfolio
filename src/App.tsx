@@ -3,16 +3,9 @@ import { lazy, Suspense, useEffect, useState } from 'react'
 import Dock from './components/Dock'
 import PillNav from './components/PillNav'
 import DecryptedText from './components/DecryptedText'
-import docker from './assets/docker-svgrepo-com.svg'
-import postgres from './assets/postgresql-svgrepo-com.svg'
-import redis from './assets/redis-svgrepo-com.svg'
-import react from './assets/reactjs-svgrepo-com.svg'
-import tailwind from './assets/tailwind-svgrepo-com.svg'
-import typescript from './assets/typescript-icon-svgrepo-com.svg'
-import nodejs from './assets/node-js-svgrepo-com.svg'
-import nextjs from './assets/next-js-svgrepo-com.svg'
-import js from './assets/js-svgrepo-com.svg'
-import git from './assets/git-svgrepo-com.svg'
+import logo from './assets/portfolio.svg'
+import AnimatedContent from './components/AnimatedContent'
+import LogoLoop from './components/LogoLoop';
 import {
   Rocket,
   Code2,
@@ -31,10 +24,10 @@ import {
   TrendingUp,
   ExternalLink
 } from 'lucide-react'
+import { SiReact, SiNextdotjs, SiTypescript, SiTailwindcss, SiJavascript, SiPostgresql, SiNodedotjs, SiGit, SiRedis, SiDocker, SiGithub  } from 'react-icons/si';
 
 // Lazy load heavy components
 const LiquidEther = lazy(() => import('./components/LiquidEther'))
-const CircularGallery = lazy(() => import('./components/CircularGallery'))
 const CardSwap = lazy(() => import('./components/CardSwap').then(module => ({ default: module.default })))
 const Card = lazy(() => import('./components/CardSwap').then(module => ({ default: module.Card })))
 const SpotlightCard = lazy(() => import('./components/SpotlightCard'))
@@ -92,66 +85,37 @@ function App() {
       }
     },
     {
-      icon: <Code2 size={20} strokeWidth={1.5} className="text-white" />,
-      label: 'Skills',
-      onClick: () => {
-        const element = document.getElementById('skills')
-        element?.scrollIntoView({ behavior: 'smooth' })
-      }
-    },
-    {
       icon: <MessageSquare size={20} strokeWidth={1.5} className="text-white" />,
       label: 'Contact',
       onClick: () => {
         const element = document.getElementById('contact')
         element?.scrollIntoView({ behavior: 'smooth' })
       }
+    },
+    {
+      icon: <Code2 size={20} strokeWidth={1.5} className="text-white" />,
+      label: 'Skills',
+      onClick: () => {
+        const element = document.getElementById('skills')
+        element?.scrollIntoView({ behavior: 'smooth' })
+      }
     }
   ]
 
-  // Top 10 Most In-Demand Skills with SVG icons
-  const skillsItems = [
-    {
-      image: js,
-      text: " ",
-    },
-    {
-      image: react,
-      text: ' ',
-    },
-    {
-      image: nodejs,
-      text: ' ',
-    },
-    {
-      image: nextjs,
-      text: ' ',
-    },
-    {
-      image: typescript,
-      text: ' ',
-    },
-    {
-      image: postgres,
-      text: '',
-    },
-    {
-      image: redis,
-      text: ' ',
-    },
-    {
-      image: docker,
-      text: ' ',
-    },
-    {
-      image: tailwind,
-      text: ' ',
-    },
-    {
-      image: git,
-      text: ' ',
-    },
-  ]
+  const techLogos = [
+  { node: <SiReact />, title: "React" },
+  { node: <SiNextdotjs />, title: "Next.js" },
+  { node: <SiTypescript />, title: "TypeScript" },
+  { node: <SiTailwindcss />, title: "Tailwind CSS" },
+  { node: <SiPostgresql />, title: "PostgreSQL" },
+  { node: <SiRedis />, title: "Redis" },
+  { node: <SiDocker />, title: "Docker" },
+  { node: <SiGit />, title: "Git" },
+  { node: <SiJavascript />, title: "JavaScript" },
+  { node: <SiNodedotjs />, title: "Node.js" },
+  { node: <SiGithub />, title: "GitHub" },
+
+];
 
   return (
     <>
@@ -185,7 +149,7 @@ function App() {
       {/* PillNav for mobile only */}
       <div className="md:hidden">
         <PillNav
-          logo="/vite.svg"
+          logo={logo}
           logoAlt="Portfolio Logo"
           items={[
             { label: 'Home', href: '#hero' },
@@ -195,7 +159,7 @@ function App() {
           ]}
           activeHref="#hero"
           className="custom-nav"
-          ease="power2.easeOut"
+          ease="power3.out"
           baseColor="rgba(0, 0, 0, 0.8)"
           pillColor="#5227FF"
           hoveredPillTextColor="#ffffff"
@@ -228,6 +192,22 @@ function App() {
               {/* Left Side - Text Content */}
               <div className="hero-text text-center lg:text-left order-2 lg:order-1 flex flex-col justify-center">
                 {/* Main Name */}
+                <AnimatedContent
+                  distance={150}
+                  direction="horizontal"
+                  reverse={false}
+                  duration={1.2}
+                  ease="power3.out"
+                  initialOpacity={0.2}
+                  animateOpacity
+                  scale={1.1}
+                  threshold={0.2}
+                  delay={0.3}
+                >
+                  <div className="flex justify-center lg:justify-start mb-4">
+                    <img src={logo} alt="logo" className="h-20 w-20 hidden md:inline-block" />
+                  </div>
+                </AnimatedContent>
                 <h1 className="mb-6">
                   <DecryptedText
                     text="Divyansh Joshi"
@@ -693,7 +673,7 @@ function App() {
             </div>
 
             {/* CircularGallery with Skills */}
-            <div style={{ height: '600px', position: 'relative' }}>
+            <div style={{ height: '200px', position: 'relative', overflow: 'hidden'}}>
               <Suspense
                 fallback={
                   <div className="flex items-center justify-center h-full text-white/40">
@@ -701,20 +681,23 @@ function App() {
                   </div>
                 }
               >
-                <CircularGallery
-                  items={skillsItems}
-                  bend={1}
-                  textColor="#ffffff"
-                  borderRadius={0.05}
-                  scrollSpeed={1}
-                  scrollEase={0.02}
+                <LogoLoop
+                  logos={techLogos}
+                  speed={120}
+                  direction="left"
+                  logoHeight={65}
+                  gap={50}
+                  pauseOnHover
+                  scaleOnHover={true}
+                  fadeOut={false}
+                  ariaLabel="Technology partners"
                 />
               </Suspense>
             </div>
             {/* Additional Info */}
-            <div className="mt-20 pt-8 border-t border-white/10">
+            <div className="mt-20 pt-8 border-t border-white/10 flex items-center justify-center">
               <p className="text-white/40 text-sm">
-                © 2025 Divyansh Joshi. Built with React, Three.js, and passion.
+                © 2025 Divyansh Joshi. Built with React, ReactBits, and passion.
               </p>
             </div>
           </div>
