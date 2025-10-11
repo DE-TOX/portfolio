@@ -417,7 +417,7 @@ function App() {
 
                     <div className="mt-6">
                       <a
-                        href="https://teampulse-ten.vercel.app/" // ← replace with your actual link
+                        href="https://teampulse-ten.vercel.app/"
                         target="_blank"
                         rel="noopener noreferrer"
                         className="inline-flex items-center gap-2 mb-8 px-4 py-2 rounded-xl bg-[#00F5D4]/20 border border-[#00F5D4]/40 text-[#00F5D4] text-sm font-medium hover:bg-[#00F5D4]/30 transition-all duration-300"
@@ -471,7 +471,7 @@ function App() {
                     </div>
                     <div className="mt-6">
                       <a
-                        href="[your-live-link-here]"
+                        href="https://prompt-whisper.vercel.app/"
                         target="_blank"
                         rel="noopener noreferrer"
                         className="inline-flex items-center gap-2 mb-8 px-4 py-2 rounded-xl bg-[#FF9FFC]/20 border border-[#FF9FFC]/40 text-[#FF9FFC] text-sm font-medium hover:bg-[#FF9FFC]/30 transition-all duration-300"
