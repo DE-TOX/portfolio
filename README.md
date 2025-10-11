@@ -34,7 +34,7 @@ A modern, interactive portfolio website showcasing my work as a Software Develop
 
 ```bash
 # Clone the repository
-git clone https://github.com/your-username/portfolio.git
+git clone https://github.com/DE-TOX/portfolio.git
 
 # Navigate to project directory
 cd portfolio
